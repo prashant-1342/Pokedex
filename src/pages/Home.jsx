@@ -44,8 +44,9 @@ const Home = () => {
             return details;
           })
         )
+        
         setpokelist(detailedlist)  
-        // console.log(detailedlist)
+        
       }
     }
 
@@ -59,15 +60,17 @@ const Home = () => {
      try{
        const response = await fetch(url);
        const data = await response.json();
+       
        return {
         name: data.name,
         image: data.sprites.other['official-artwork'].front_default,
         type: data.types[0].type.name, 
+        type2: data.types[1]? data.types[1].type.name:null
+       
        }
      }
      catch(err){
       console.log(err);
-
      }
   }
 
@@ -101,10 +104,13 @@ const Home = () => {
   }
 
  const nextpage = ()=>{
-  
    setlowerlimit(upperlimit+1);
    setupperlimit(upperlimit+20)
  }
+
+ function capitalizeFirstLetter(val) {
+  return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+}
 
   return (
     <div>
@@ -175,7 +181,18 @@ const Home = () => {
    </div>
 
    <div className="poketype">
-      {pokemon.type}
+    
+    <div className="iop">
+    {pokemon.type}
+    </div>
+    {pokemon.type2 ?
+    <div className="iop">
+    {pokemon.type2}
+    </div>
+    :
+    ""
+    }
+    
    </div>
  </div>
 
@@ -184,10 +201,6 @@ const Home = () => {
 </div>
 </>
 }
-        
-
-       
-
       </div>
     </div>
   )

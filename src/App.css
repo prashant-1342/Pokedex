@@ -148,7 +148,7 @@ margin-bottom: 20px;
 
 .card{
   margin-top: 20px;
-  
+  margin-right: 20px;
   height: 300px;
   width: 200px;
   border: 1px solid black;
@@ -163,13 +163,19 @@ margin-bottom: 20px;
   margin-left: 20px;
   margin-bottom: 5px;
 }
+
 .poketype{
-  margin-left:20px;
-  background-color: plum;
+  margin-left: 20px;
    width: min-content;
+   display: flex;
+  gap: 10px;
+}
+
+.iop{
   padding: 4px 10px;
   border-radius: 5px;
-}
+  background-color: lightblue;
+  }
 
 .lists{
   max-width: 100vw;
@@ -178,3 +184,4 @@ margin-bottom: 20px;
   height: auto;
   flex-wrap: wrap;
 }
+
