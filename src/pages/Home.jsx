@@ -25,13 +25,38 @@ const Home = () => {
       const response = await fetch(url);
       const data2 = await response.json();
       if (response.ok) {
-        setpokelist(data2.results)  
-        console.log(data2.results)
+        const detailedlist = await Promise.all(
+          data2.results.map(async(pokemon)=>{
+            const details = await fetchpokemondetails(pokemon.url);
+            console.log(details);
+            return details;
+          })
+        )
+        setpokelist(detailedlist)  
+        console.log(detailedlist)
       }
     }
+
+    
     catch (err) {
       console.log('Some Error Found', err);
     }
+  }
+
+  const fetchpokemondetails = async(url)=>{
+     try{
+       const response = await fetch(url);
+       const data = await response.json();
+       return {
+        name: data.name,
+        image: data.sprites.other['official-artwork'].front_default,
+        type: data.types[0].type.name, 
+       }
+     }
+     catch(err){
+      console.log(err);
+
+     }
   }
 
   const fetchApi = async (inputValue) => {
@@ -93,11 +118,12 @@ const Home = () => {
       </div>
       <div>Pokedex</div>
       <div className="container">
-        <div>Name or Number</div>
+        <button>Surprise Me</button>
+        {/* <div>Name or Number</div>
         <div className="ghj">
           <input value={inputValue} onChange={handleinput} />
           <img onClick={() => handleSearch()} className='searchicon' src='./loupe.png' />
-        </div>
+        </div> */}
 
         {/* <div className="cards">
            <div className="card">
@@ -116,14 +142,14 @@ const Home = () => {
         <div className="lists">
          {pokelist.map((pokemon,index)=>(
           <div className="card" key={index}>
-            <img className='pokeimage' src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${index+1}.png`} />
+            <img className='pokeimage' src={pokemon.image} />
 
             <div className="pokename">
-              {pokelist[index].name}
+              {pokemon.name}
             </div>
 
             <div className="poketype">
-             
+               {pokemon.type}
             </div>
           </div>
 
