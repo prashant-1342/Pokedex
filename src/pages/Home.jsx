@@ -12,8 +12,6 @@ const Home = () => {
   const [pokeimage, setpokeimage] = useState("");
   const [poketype, setpoketype] = useState("");
   const [pokelist, setpokelist] = useState([]);
-  const [pokename2, setpokename2] = useState("");
-  const [pokeimage2, setpokeimage2] = useState("");
   const [poketype2, setpoketype2] = useState("");
   const[show,setshow] = useState(false);
   const[upperlimit,setupperlimit] = useState(50);
@@ -60,13 +58,16 @@ const Home = () => {
      try{
        const response = await fetch(url);
        const data = await response.json();
-       
+       const name = capitalizeFirstLetter(data.name);
+       const image =  data.sprites.other['official-artwork'].front_default;
+       const type = capitalizeFirstLetter(data.types[0].type.name);
+       const type2 = data.types[1]? capitalizeFirstLetter( data.types[1].type.name) :null
+      
        return {
-        name: data.name,
-        image: data.sprites.other['official-artwork'].front_default,
-        type: data.types[0].type.name, 
-        type2: data.types[1]? data.types[1].type.name:null
-       
+        name,
+        image,
+        type,
+        type2
        }
      }
      catch(err){
@@ -79,11 +80,17 @@ const Home = () => {
       const url = `https://pokeapi.co/api/v2/pokemon/${inputValue}`;
       const response = await fetch(url);
       const data = await response.json();
+      const name = capitalizeFirstLetter(data.name);
+      const image =  data.sprites.other['official-artwork'].front_default;
+      const type = capitalizeFirstLetter(data.types[0].type.name);
+      const type2 = data.types[1]? capitalizeFirstLetter( data.types[1].type.name) :null
 
       if (response.ok) {
-        setpokename(data.name);
-        setpoketype(data.types[0].type.name);
-        setpokeimage(data.sprites.other['official-artwork'].front_default);
+        setpokename(name);
+        setpoketype(type);
+        setpokeimage(image);
+        setpoketype2(type2);
+
         setshow(true);
         console.log(data.sprites);
       }
@@ -161,8 +168,18 @@ const Home = () => {
   </div>
 
   <div className="poketype">
-   {poketype}
-  </div>
+    <div className="iop">
+    {poketype}
+    </div>
+    {poketype2 ?
+    <div className="iop">
+    {poketype2}
+    </div>
+    :
+    ""
+    }
+    
+   </div>
   </div>
 </div> 
 :
@@ -174,14 +191,16 @@ const Home = () => {
 <div className="lists">
 {pokelist.map((pokemon,index)=>(
  <div className="card" key={index}>
-   <img className='pokeimage' src={pokemon.image} />
+  <a href='/pokedex'>
+  <img  className='pokeimage' src={pokemon.image} /></a>
+   
 
    <div className="pokename">
+ 
      {pokemon.name}
    </div>
 
    <div className="poketype">
-    
     <div className="iop">
     {pokemon.type}
     </div>
