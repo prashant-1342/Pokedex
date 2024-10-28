@@ -16,7 +16,7 @@ const Home = () => {
   const [pokeimage2, setpokeimage2] = useState("");
   const [poketype2, setpoketype2] = useState("");
   const[show,setshow] = useState(false);
-  const[upperlimit,setupperlimit] = useState(20);
+  const[upperlimit,setupperlimit] = useState(50);
   const[lowerlimit,setlowerlimit] = useState(0);
   
   function handleinput(e) {
@@ -24,8 +24,11 @@ const Home = () => {
   }
 
   useEffect(() => {
-    fetchApi2();
-  }, [])
+    setTimeout(() => {
+      fetchApi2();
+    }, 500);
+    
+  }, [lowerlimit,upperlimit])
 
   const fetchApi2 = async () => {
     try {
@@ -37,12 +40,12 @@ const Home = () => {
         const detailedlist = await Promise.all(
           data2.results.map(async(pokemon)=>{
             const details = await fetchpokemondetails(pokemon.url);
-            console.log(details);
+            // console.log(details);
             return details;
           })
         )
         setpokelist(detailedlist)  
-        console.log(detailedlist)
+        // console.log(detailedlist)
       }
     }
 
@@ -90,7 +93,7 @@ const Home = () => {
   function handleSearch() {
     if (inputValue !== "") {
       fetchApi(inputValue);
-      setinputValue("");
+   
     }
     else {
       alert("Enter a valid value");
@@ -98,7 +101,9 @@ const Home = () => {
   }
 
  const nextpage = ()=>{
-   
+  
+   setlowerlimit(upperlimit+1);
+   setupperlimit(upperlimit+20)
  }
 
   return (
@@ -156,7 +161,7 @@ const Home = () => {
 </div> 
 :
 <>
-<a className='bnm' onClick={()=>nextpage}>
+<a className='bnm' onClick={nextpage}>
   <img className='renewable' src='./reload.png'/>
   Surpise Me
 </a>
