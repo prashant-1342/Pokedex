@@ -1,4 +1,9 @@
 import React, { useState, useEffect } from 'react'
+import { Link} from 'react-router-dom';
+import News from './News';
+import Pokedex from './Pokedex';
+import Animations from './Animations';
+import Events from './Events';
 
 const Home = () => {
 
@@ -10,6 +15,9 @@ const Home = () => {
   const [pokename2, setpokename2] = useState("");
   const [pokeimage2, setpokeimage2] = useState("");
   const [poketype2, setpoketype2] = useState("");
+  const[show,setshow] = useState(false);
+  const[upperlimit,setupperlimit] = useState(20);
+  const[lowerlimit,setlowerlimit] = useState(0);
   
   function handleinput(e) {
     setinputValue(e.target.value);
@@ -21,7 +29,8 @@ const Home = () => {
 
   const fetchApi2 = async () => {
     try {
-      const url = `https://pokeapi.co/api/v2/pokemon`
+      // const url = `https://pokeapi.co/api/v2/pokemon`
+      const url = `https://pokeapi.co/api/v2/pokemon?limit=${upperlimit}&offset=${lowerlimit}`
       const response = await fetch(url);
       const data2 = await response.json();
       if (response.ok) {
@@ -69,8 +78,7 @@ const Home = () => {
         setpokename(data.name);
         setpoketype(data.types[0].type.name);
         setpokeimage(data.sprites.other['official-artwork'].front_default);
-
-
+        setshow(true);
         console.log(data.sprites);
       }
     }
@@ -89,73 +97,91 @@ const Home = () => {
     }
   }
 
+ const nextpage = ()=>{
+   
+ }
 
   return (
     <div>
       <div className="navbar">
         <ul>
-          <li>
+          <li className='ab1'><Link className='vbn' to='/'>
             <img className='pokeball' src='./star.png' />
             <div>Home</div>
+            </Link>
           </li>
-          <li>
+          <li className='ab2'><Link className='vbn'  to='/pokedex'>
             <img className='pokeball' src='./star.png' />
             <div>Pokedex</div>
+            </Link>
           </li>
-          <li>
+          <li className='ab3'><Link className='vbn'  to='/animations' >
             <img className='pokeball' src='./star.png' />
             <div>Animations</div>
+            </Link>
           </li>
-          <li>
+          <li className='ab4'><Link className='vbn'  to='/events'>
             <img className='pokeball' src='./star.png' />
             <div>Events</div>
+            </Link>
           </li>
-          <li>
+          <li className='ab5'><Link className='vbn'  to='/news'>
             <img className='pokeball' src='./star.png' />
             <div>News</div>
+            </Link>
           </li>
         </ul>
       </div>
-      <div>Pokedex</div>
+      <div className='cvf'>Pokédex</div>
       <div className="container">
-        <button>Surprise Me</button>
-        {/* <div>Name or Number</div>
+        <div className='qas'>Name or Number</div>
         <div className="ghj">
-          <input value={inputValue} onChange={handleinput} />
+          <input className='sed' value={inputValue} onChange={handleinput} />
           <img onClick={() => handleSearch()} className='searchicon' src='./loupe.png' />
-        </div> */}
-
-        {/* <div className="cards">
-           <div className="card">
-               <img className='pokeimage' src={`${pokeimage}`}/>
-              
-           <div className="pokename">
-             {pokename}
-           </div>
-
-           <div className="poketype">
-            {poketype}
-           </div>
-           </div>
-        </div> */}
-
-        <div className="lists">
-         {pokelist.map((pokemon,index)=>(
-          <div className="card" key={index}>
-            <img className='pokeimage' src={pokemon.image} />
-
-            <div className="pokename">
-              {pokemon.name}
-            </div>
-
-            <div className="poketype">
-               {pokemon.type}
-            </div>
-          </div>
-
-         ))}
-          
         </div>
+
+{show ? 
+  <div className="cards">
+  <div className="card">
+      <img className='pokeimage' src={`${pokeimage}`}/>
+     
+  <div className="pokename">
+    {pokename}
+  </div>
+
+  <div className="poketype">
+   {poketype}
+  </div>
+  </div>
+</div> 
+:
+<>
+<a className='bnm' onClick={()=>nextpage}>
+  <img className='renewable' src='./reload.png'/>
+  Surpise Me
+</a>
+<div className="lists">
+{pokelist.map((pokemon,index)=>(
+ <div className="card" key={index}>
+   <img className='pokeimage' src={pokemon.image} />
+
+   <div className="pokename">
+     {pokemon.name}
+   </div>
+
+   <div className="poketype">
+      {pokemon.type}
+   </div>
+ </div>
+
+))}
+
+</div>
+</>
+}
+        
+
+       
 
       </div>
     </div>

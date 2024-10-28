@@ -27,7 +27,7 @@ function App() {
         )
       },
       {
-        path:'Animations',
+        path:'/animations',
         element:(
           <>
            <Animations/>
@@ -35,7 +35,7 @@ function App() {
         )
       },
       {
-        path:'Events',
+        path:'/events',
         element:(
           <>
              <Events/>
@@ -43,7 +43,7 @@ function App() {
         )
       },
       {
-        path:'News',
+        path:'/news',
         element:(
           <>
             <News/>
