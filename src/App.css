@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+*{
+  padding: 0;
+  margin: 0;
+  font-family: "Montserrat", serif;;
+}
+
+.navbar{
+  height: 90px;
+  max-width: 100vw;
+  background-color: black;
+ 
+}
+
+.navbar ul{
+  display: flex;
+  background-color: black;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.pokeball{
+  height: 30px;
+}
+
+.navbar ul li{
+  gap: 5px;
+  color: white;
+  cursor: pointer;
+  border-right: 1px solid black;
+  width: 100px;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+display: flex;
+flex-direction: column;
+  list-style: none;
+  background-color: gray;
+}
+
+.navbar ul li:hover{
+  background-color: burlywood;
+}
+
+.searchicon{
+  height: 20px;
+  cursor: pointer;
+}
+
+.ghj{
+  display: flex;
+  align-items: center;
+gap: 10px;
+}
+
+.card{
+  margin-top: 20px;
+  margin-left: 20px;
+  height: 300px;
+  width: 200px;
+  border: 1px solid black;
+}
+
+.pokeimage{
+  height: 200px;
+   width: 100%;
+}
+
+.lists{
+  max-width: 100vw;
+  gap: 20px;
+  display: flex;
+  height: auto;
+  flex-wrap: wrap;
+}
