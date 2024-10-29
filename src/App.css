@@ -196,12 +196,12 @@ margin-bottom: 20px;
 }
 
 .axs{
-  margin-top: 20px;
+  margin-top: 30px;
   display: flex;
-  margin: 0 auto;
+  justify-content: center;
   font-size: 25px;
   font-weight: bold;
-  width: min-content;
+  width: 100%;
   margin-bottom: 20px;
 }
 
@@ -323,4 +323,94 @@ border: 4px solid black;
    width: min-content;
    display: flex;
   gap: 10px;
+}
+
+
+/* styles.css */
+.type-fire {
+  background-color: #FF4500; /* Red */
+  color: #FFFFFF; /* White text */
+}
+
+.type-water {
+  background-color: #1E90FF; /* Blue */
+  color: #FFFFFF; /* White text */
+}
+
+.type-grass {
+  background-color: #32CD32; /* Green */
+  color: #FFFFFF; /* White text */
+}
+
+.type-electric {
+  background-color: #FFD700; /* Yellow */
+  color: #000000; /* Black text */
+}
+
+.type-ground {
+  background-color: #D2B48C; /* Tan */
+  color: #000000; /* Black text */
+}
+
+.type-rock {
+  background-color: #A0522D; /* Brown */
+  color: #FFFFFF; /* White text */
+}
+
+.type-ice {
+  background-color: #00BFFF; /* Light Blue */
+  color: #000000; /* Black text */
+}
+
+.type-flying {
+  background-color: #87CEEB; /* Light Blue */
+  color: #000000; /* Black text */
+}
+
+.type-psychic {
+  background-color: #FF69B4; /* Pink */
+  color: #000000; /* Black text */
+}
+
+.type-ghost {
+  background-color: #6A5ACD; /* Slate Blue */
+  color: #FFFFFF; /* White text */
+}
+
+.type-bug {
+  background-color: #9ACD32; /* Yellow-Green */
+  color: #000000; /* Black text */
+}
+
+.type-poison {
+  background-color: #800080; /* Purple */
+  color: #FFFFFF; /* White text */
+}
+
+.type-fairy {
+  background-color: #FFB6C1; /* Light Pink */
+  color: #000000; /* Black text */
+}
+
+.type-fighting {
+  background-color: #FF6347; /* Tomato */
+  color: #FFFFFF; /* White text */
+}
+
+.type-normal {
+  background-color: #D3D3D3; /* Light Gray */
+  color: #000000; /* Black text */
+}
+
+.type-steel {
+  background-color: #C0C0C0; /* Silver */
+  color: #000000; /* Black text */
+}
+
+/* Common styles for types */
+.type {
+  padding: 5px;
+  border-radius: 5px;
+  margin: 0 5px;
+  display: inline-block; /* Ensure it behaves like a block for spacing */
 }

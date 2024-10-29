@@ -1,380 +1,212 @@
-import React, { useEffect, useState } from 'react'
-
+import React, { useEffect, useState } from 'react';
 
 const Pokedex = ({ findDetails, setfindDetails }) => {
-  const [aboutpokemon, setaboutpokemon] = useState('')
-  const [image, setimage] = useState('');
-  const [type, settype] = useState('');
-  const [type2, settype2] = useState('')
-  const [height, setheight] = useState()
-  const [weight, setweight] = useState()
-  const [chainurl, setchainurl] = useState('');
-  const [base1, setbase1] = useState('');
-  const [base2, setbase2] = useState('');
-  const [base3, setbase3] = useState('');
-  const [pok1, setpok1] = useState('');
-  const [pok2, setpok2] = useState('');
-  const [pok3, setpok3] = useState('');
-  const [abc1, setabc1] = useState('');
-  const [abc2, setabc2] = useState('');
-  const [abc3, setabc3] = useState('');
-  const [t1, sett1] = useState('');
-  const [t2, sett2] = useState('')
-  const [t3, sett3] = useState('');
-  const [t4, sett4] = useState('')
-  const [t5, sett5] = useState('');
-  const [t6, sett6] = useState('')
-
-
+  const [aboutpokemon, setAboutPokemon] = useState('');
+  const [image, setImage] = useState('');
+  const [type, setType] = useState('');
+  const [type2, setType2] = useState('');
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
+  const [chainUrl, setChainUrl] = useState('');
+  const [base1, setBase1] = useState('');
+  const [base2, setBase2] = useState('');
+  const [base3, setBase3] = useState('');
+  const [abc1, setAbc1] = useState('');
+  const [abc2, setAbc2] = useState('');
+  const [abc3, setAbc3] = useState('');
+  const [t1, setT1] = useState('');
+  const [t2, setT2] = useState('');
+  const [t3, setT3] = useState('');
+  const [t4, setT4] = useState('');
+  const [t5, setT5] = useState('');
+  const [t6, setT6] = useState('');
+  const [category, setcategory] = useState('')
+  const [ability,setability] = useState('')
 
   useEffect(() => {
     if (findDetails) {
-      const small = smallfirstletter(findDetails);
-       fetchApi3(small);
-    fetchApi4(small);
-      fetchApi5(chainurl)
+      const pokemonName = smallFirstLetter(findDetails);
+      fetchPokemonSpecies(pokemonName);
+      fetchPokemonDetails(pokemonName);
     }
-
-  }, []);
-
-  
-
-  const smallfirstletter = (val) => {
-    return String(val).charAt(0).toLowerCase() + String(val).slice(1);
-  }
+  }, [findDetails]);
 
   useEffect(() => {
-    if (chainurl) {
-      console.log(chainurl);
+    if (chainUrl) {
+      fetchEvolutionChain(chainUrl);
     }
-  }, [chainurl]);
+  }, [chainUrl]);
 
+  const smallFirstLetter = (val) => 
+    val.charAt(0).toLowerCase() + val.slice(1);
 
-  const fetchApi3 = async (findDetails) => {
+  const capitalizeFirstLetter = (val) =>
+    val.charAt(0).toUpperCase() + val.slice(1);
+
+  const fetchPokemonSpecies = async (name) => {
     try {
-      const url = `https://pokeapi.co/api/v2/pokemon-species/${findDetails}/`
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${name}/`);
+      if (response.ok) {
+        const data = await response.json();
+        setChainUrl(data.evolution_chain.url);
+        const flavorText = data.flavor_text_entries.find((e) => e.language.name === 'en');
+        const genera = data.genera.find((e)=>e.language.name === 'en');
+        setcategory(genera?.genus)
+        setAboutPokemon(flavorText?.flavor_text || 'No description found.');
+      } else {
+        console.error("Failed to fetch species:", response.status);
+      }
+    } catch (err) {
+      console.error("Error fetching species:", err);
+    }
+  };
+
+  const fetchPokemonDetails = async (name) => {
+    try {
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+      if (response.ok) {
+        const data = await response.json();
+        setImage(data.sprites.other['official-artwork'].front_default);
+        setType(capitalizeFirstLetter(data.types[0].type.name));
+        setType2(data.types[1] ? capitalizeFirstLetter(data.types[1].type.name) : null);
+        setHeight((data.height / 10).toFixed(1));
+        const kg = (data.weight / 10).toFixed(1); // 1 hg = 0.1 kg
+        setWeight(`${kg} kg`); // Set weight in kg
+
+        const ab = data.abilities[0].ability.name;
+        setability(capitalizeFirstLetter(ab));
+      }
+    } catch (error) {
+      console.error("Error fetching details:", error);
+    }
+  };
+
+  const fetchEvolutionChain = async (url) => {
+    try {
       const response = await fetch(url);
       if (response.ok) {
-        const data3 = await response.json();
-        setchainurl(data3.evolution_chain.url)
+        const data = await response.json();
+        const speciesNames = [
+          data.chain?.species?.name,
+          data.chain?.evolves_to[0]?.species?.name,
+          data.chain?.evolves_to[0]?.evolves_to[0]?.species?.name,
+        ];
 
-        if (data3.flavor_text_entries && data3.flavor_text_entries.length > 0) {
-          const english = data3.flavor_text_entries.find((e) => e.language.name === 'en');
-          setaboutpokemon(english.flavor_text);
-        } else {
-          console.warn("No flavor text available.");
-          setaboutpokemon("No description found.");
-        }
-      }
-      else {
-        console.error("Failed to fetch data:", response.status);
-      }
-    }
-    catch (err) {
-      console.log(err);
-    }
-  }
+        const [img1, img2, img3] = await Promise.all(
+          speciesNames.map((name) => fetchPokemonImage(name))
+        );
 
-  const fetchApi4 = async (findDetails) => {
-    try {
-      const url = `https://pokeapi.co/api/v2/pokemon/${findDetails}`;
-      const response = await fetch(url);
-      const data = await response.json();
-      setimage(data.sprites.other['official-artwork'].front_default);
-      settype(capitalizeFirstLetter(data.types[0].type.name));
-      settype2(data.types[1] ? capitalizeFirstLetter(data.types[1].type.name) : null);
-      {
-        abc1 === '' ?
-          setabc1(data.sprites.other['official-artwork'].front_default)
-          :
-          '';
+        setBase1(capitalizeFirstLetter(speciesNames[0] || ''));
+        setBase2(capitalizeFirstLetter(speciesNames[1] || ''));
+        setBase3(capitalizeFirstLetter(speciesNames[2] || ''));
+
+        setAbc1(img1);
+        setAbc2(img2);
+        setAbc3(img3);
+
+        await Promise.all([
+          fetchPokemonType(speciesNames[0], setT1, setT2),
+          fetchPokemonType(speciesNames[1], setT3, setT4),
+          fetchPokemonType(speciesNames[2], setT5, setT6),
+        ]);
       }
-      {
-        abc2 === '' ?
-          setabc2(data.sprites.other['official-artwork'].front_default)
-          :
-          '';
-      }
-      {
-        abc3 === '' ?
-          setabc3(data.sprites.other['official-artwork'].front_default)
-          :
-          '';
-      }
-      const abc = data.height / 10;
-      setheight(abc);
-      const bcd = data.weight * 0.2;
-      setweight(bcd);
     } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const fetchApi5 = async (chainurl) => {
-    try {
-      const response = await fetch(chainurl);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-
-      const data = await response.json();
-
-      // Ensure data properties exist before calling capitalizeFirstLetter
-      setbase1(capitalizeFirstLetter(data.chain?.species?.name || ''));
-
-
-      setbase2(capitalizeFirstLetter(data.chain?.evolves_to[0]?.species?.name || ''));
-
-      setbase3(capitalizeFirstLetter(data.chain?.evolves_to[0]?.evolves_to[0]?.species?.name || ''));
-
-
-      const [img1, img2, img3] = await Promise.all([
-        fetchApi7(smallfirstletter(data.chain?.species?.name || '')),
-        fetchApi7(smallfirstletter(data.chain?.evolves_to[0]?.species?.name || '')),
-        fetchApi7(smallfirstletter(data.chain?.evolves_to[0]?.evolves_to[0]?.species?.name || '')),
-      ]);
-
-      
-      fetchApiType(smallfirstletter(data.chain?.species?.name));
-      fetchApiType2(smallfirstletter(data.chain?.evolves_to[0]?.species?.name || ''));
-      fetchApiType3(smallfirstletter(data.chain?.evolves_to[0]?.evolves_to[0]?.species?.name || ''));
-
-      
-
-      setabc1(img1);
-      setabc2(img2);
-      setabc3(img3);
-
-    } catch(err){
-      console.log('Error found in fetchApi5:', err);
+      console.error("Error fetching evolution chain:", error);
     }
   };
 
-  const fetchApi7 = async (name) => {
+  const fetchPokemonImage = async (name) => {
+    if (!name) return '';
     try {
-      const url = `https://pokeapi.co/api/v2/pokemon/${name}`;
-      const response = await fetch(url);
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
       const data = await response.json();
-  
-      return data.sprites.other['official-artwork'].front_default  || "";
+      return data.sprites.other['official-artwork'].front_default || '';
     } catch (error) {
-      console.error(`Error fetching details for ${name}:`, error);
-      return ''; //  Return empty string if the fetch fails
+      console.error(`Error fetching image for ${name}:`, error);
+      return '';
     }
   };
 
-  const fetchApiType = async (name) => {
+  const fetchPokemonType = async (name, setType1, setType2) => {
+    if (!name) return;
     try {
-      const url = `https://pokeapi.co/api/v2/pokemon/${name}`;
-      const response = await fetch(url);
+      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
       const data = await response.json();
-      const type1 = data.types[0]?.type.name || "";
-      const type2 = data.types[1]?.type.name || "";
-      sett1(capitalizeFirstLetter(type1));
-      sett2(capitalizeFirstLetter(type2));
-     
+      setType1(capitalizeFirstLetter(data.types[0]?.type.name || ''));
+      setType2(capitalizeFirstLetter(data.types[1]?.type.name || ''));
     } catch (error) {
-      console.error(`Error fetching details for ${name}:`, error);
-      return ''; //  Return empty string if the fetch fails
+      console.error(`Error fetching type for ${name}:`, error);
     }
   };
-  const fetchApiType2 = async (name) => {
-    try {
-      const url = `https://pokeapi.co/api/v2/pokemon/${name}`;
-      const response = await fetch(url);
-      const data = await response.json();
-      const type1 = data.types[0]?.type.name || "";
-      const type2 = data.types[1]?.type.name || "";
-      sett3(capitalizeFirstLetter(type1));
-      sett4(capitalizeFirstLetter(type2));
-      
-    } catch (error) {
-      console.error(`Error fetching details for ${name}:`, error);
-      return ''; //  Return empty string if the fetch fails
-    }
-  };
-  const fetchApiType3 = async (name) => {
-    try {
-      const url = `https://pokeapi.co/api/v2/pokemon/${name}`;
-      const response = await fetch(url);
-      const data = await response.json();
-      const type1 = data.types[0]?.type.name || "";
-      const type2 = data.types[1]?.type.name || "";
-      sett5(capitalizeFirstLetter(type1));
-      sett6(capitalizeFirstLetter(type2));
-     
-    } catch (error) {
-      console.error(`Error fetching details for ${name}:`, error);
-      return ''; //  Return empty string if the fetch fails
-    }
-  };
-
-
- 
-
-
-
-
-
-
-
-  function capitalizeFirstLetter(val) {
-    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
-  }
 
   return (
     <>
-      <div className='axs'>{findDetails}</div>
+      <div className='axs'>
+        <div className="ijk">
+        {findDetails}
+        </div>
+      
+        </div>
       <div className="containerpokedex">
         <div className="row1">
           <div className="col1">
-            <img className='edr' src={`${image}`} />
+            <img className='edr' src={image} alt="Pokemon" />
           </div>
           <div className="col2">
             {aboutpokemon}
-            <br />
-            <br />
-            <span className='azs'>Versions: <img className='pokeballsize' src='./pokeball (2).png' />
-              <img className='pokeballsize' src='./pokeball.png' />
+            <br /><br />
+            <span className='azs'>
+              Versions: 
+              <img className='pokeballsize' src='./pokeball (2).png' alt="Pokeball" />
+              <img className='pokeballsize' src='./pokeball.png' alt="Pokeball" />
             </span>
-
             <div className="aboutpokemon">
               <div className="colum1">
-                <div className="height">
-                  Height
-                  <br />
-                  {height} meters
-                </div>
-
-                <div className="weight">
-                  Weight<br />
-                  {weight} lbs
-
-                </div>
-
-                <div className="gender">
-                  Gender<br />
+                <div className="height"><span style={{color:"white"}}> Height</span><br/>{height} meters</div>
+                <div className="weight"><span style={{color:"white"}}>Weight<br/></span>{weight}</div>
+                <div className="gender" style={{color:"white"}}>Gender<br />
                   <span className='dcf'>
-                    <img className='gendermale' src='./mars.png' />
-                    <img className='gendermale' src='./femenine.png' />
+                    <img className='gendermale' src='./mars.png' alt="Male" />
+                    <img className='gendermale' src='./femenine.png' alt="Female" />
                   </span>
                 </div>
-
               </div>
-              <div className="colum2">
-                <div className="category">
-                  Category<br />
-                  Lizard
-                </div>
-                <div className="abilities">
-                  Abilities<br />
-                  Blaze
-                </div>
+              <div className="colum2" style={{paddingTop:"10px"}}>
+                <div className="category"><span style={{color:"white"}}>Category<br/></span>{category}</div>
+                <div className="abilities"><span style={{color:"white"}}>Abilities<br /></span>{ability}</div>
               </div>
             </div>
-
-
-
           </div>
         </div>
         <div className="row2">
-          <div style={{ fontSize: '20px', fontWeight: "bold", marginBottom: "15px" }}>Type</div>
+          <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '15px' }}>Type</div>
           <div className="poketype">
-            <div className="iop">
-              {type}
-            </div>
-            {type2 ?
-              <div className="iop">
-                {type2}
-              </div>
-              :
-              ""
-            }
-          </div>
-          <div style={{ marginTop: "15px", fontSize: '20px', fontWeight: "bold", marginBottom: "15px" }}>Weakness</div>
-          <div className="poketype">
-            <div className="iop">
-              Grass
-            </div>
-
-            <div className="iop">
-              Stone
-            </div>
+            <div className="iop">{type}</div>
+            {type2 && <div className="iop">{type2}</div>}
           </div>
         </div>
-
         <div className="row3">
           <h2>Evolutions</h2>
           <div className="rft">
-            <div className="co1">
-              <div className='evolvecontain'>
-                <img className='rfc' src={abc1 || ''} />
-
-              </div>
-              <div style={{ marginBottom: "10px" }}>{base1}</div>
-              <div className="poketype2 ">
-                <div className="iop">
-                 {t1}
-                </div>
-                {t2 ?
-                <div className="iop">
-                {t2}
-               </div>
-               :
-               null}
-                
-              </div>
-            </div>
-            <img className='gre' src='./greater-than-symbol.png' />
-            <div className="co1">
-              <div className='evolvecontain'>
-                <img className='rfc' src={abc2} />
-              </div>
-              <div style={{ marginBottom: "10px" }}>{base2}</div>
-              <div className="poketype2">
-                <div className="iop">
-                 {t1}
-                </div>
-                {t2 ?
-                <div className="iop">
-                {t2}
-               </div>
-               :
-               null}
-              </div>
-            </div>
-            {abc3 ?
-              <>
-                <img className='gre' src='./greater-than-symbol.png' />
-                <div className="co1">
+            {[abc1, abc2, abc3].map((img, index) => (
+              img && (
+                <div className="co1" key={index}>
                   <div className='evolvecontain'>
-                    <img className='rfc' src={abc3} />
+                    <img className='rfc' src={img} alt={`Evolution ${index + 1}`} />
                   </div>
-                  <div style={{ marginBottom: "10px" }}>{base3}</div>
+                  <div style={{ marginBottom: '10px' }}>{[base1, base2, base3][index]}</div>
                   <div className="poketype2">
-                    <div className="iop">
-                     {t1}
-                    </div>
-                    {t2 ?
-                <div className="iop">
-                {t2}
-               </div>
-               :
-               null}
+                    <div className="iop">{[t1, t3, t5][index]}</div>
+                    {[t2, t4, t6][index] && <div className="iop">{[t2, t4, t6][index]}</div>}
                   </div>
                 </div>
-              </>
-              :
-              ""
-            }
-
-
+              )
+            ))}
           </div>
         </div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Pokedex
+export default Pokedex;
