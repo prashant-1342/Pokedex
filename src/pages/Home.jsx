@@ -119,10 +119,11 @@ const Home = ({findDetails  ,setfindDetails}) => {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
   }
 
-  function handleimageclick(val){
-    console.log(val)
-  }
+ function handleimageclick(val){
+  setfindDetails(val);
+ }
 
+  
   return (
     <div>
       <div className="navbar">

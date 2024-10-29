@@ -9,7 +9,7 @@ import Navbar from './components/Navbar'
 import { RouterProvider,createBrowserRouter } from 'react-router-dom'
 
 function App() {
-  const[findDetails,setfindDetails] = useState(30);
+  const[findDetails,setfindDetails] = useState('');
  
    const router = createBrowserRouter([
       {

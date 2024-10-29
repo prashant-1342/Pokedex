@@ -1,32 +1,99 @@
-import React from 'react'
+import React,{useEffect, useState} from 'react'
 
 
 const Pokedex = ({findDetails  ,setfindDetails}) => {
+  const [aboutpokemon, setaboutpokemon] = useState('')
+   const [image, setimage] = useState('');
+   const [type, settype] = useState('');
+   const [type2, settype2] = useState('')
+   const [height, setheight] = useState()
+   const [weight, setweight] = useState() 
+   const[chainurl,setchainurl] = useState('');
+ 
+  useEffect(() => {
+    if (findDetails) {
+      const small =  smallfirstletter(findDetails);
+      fetchApi3(small);
+      fetchApi4(small)
+    }
+    
+  }, []); 
 
-  const fetchApi3 = async ()=>{
+  const smallfirstletter=(val)=>{
+      return String(val).charAt(0).toLowerCase() + String(val).slice(1);
+  }
+  
+  useEffect(() => {
+    if (chainurl) {
+      console.log(chainurl);
+    }
+  }, [chainurl]);
+  
+
+  const fetchApi3 = async (findDetails)=>{
      try{
         const url = `https://pokeapi.co/api/v2/pokemon-species/${findDetails}/`
         const response = await fetch(url);
-        const data3 = await response.json();
         if(response.ok){
-          
+        const data3 = await response.json();
+        setchainurl(data3.evolution_chain.url)
+        
+        if (data3.flavor_text_entries && data3.flavor_text_entries.length > 0) {
+          const english = data3.flavor_text_entries.find((e)=>e.language.name === 'en');
+          setaboutpokemon(english.flavor_text);
+        } else {
+          console.warn("No flavor text available.");
+          setaboutpokemon("No description found.");
         }
      }
+     else {
+      console.error("Failed to fetch data:", response.status);
+    }
+    }
      catch(err){
       console.log(err);
      }
   }
+  
+  const fetchApi4 = async (findDetails)=>{
+    try {
+      const url = `https://pokeapi.co/api/v2/pokemon/${findDetails}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      setimage(data.sprites.other['official-artwork'].front_default);
+      settype(capitalizeFirstLetter(data.types[0].type.name));
+      settype2(data.types[1] ? capitalizeFirstLetter(data.types[1].type.name) : null);
+      const abc = data.height / 10;
+     setheight(abc);
+     const bcd = data.weight * 0.2;
+      setweight(bcd);
+    } catch (error) {
+       console.log(error)
+    }
+  }
+
+  const fetchApi5 = async (chainurl)=>{
+    try {
+      const url = `${chainurl}`
+    } catch (error) {
+      
+    }
+  }
+
+  function capitalizeFirstLetter(val) {
+    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+  }
 
   return (
     <>
-      <div className='axs'>Charmander</div>
+      <div className='axs'>{findDetails}</div>
       <div className="containerpokedex">
         <div className="row1">
           <div className="col1">
-            <img className='edr' src='./pokeball.png' />
+            <img className='edr' src={`${image}`} />
           </div>
           <div className="col2">
-            The flame on its tail shows the strength of its life-force. If Charmander is weak, the flame also burns weakly.
+               {aboutpokemon}
             <br />
             <br />
             <span className='azs'>Versions: <img className='pokeballsize' src='./pokeball (2).png' />
@@ -38,12 +105,12 @@ const Pokedex = ({findDetails  ,setfindDetails}) => {
                 <div className="height">
                   Height
                   <br />
-                  2'60"
+                 {height} meters
                 </div>
 
                 <div className="weight">
                   Weight<br />
-                  187.lbs
+                  {weight} lbs
 
                 </div>
 
@@ -76,11 +143,15 @@ const Pokedex = ({findDetails  ,setfindDetails}) => {
           <div style={{ fontSize: '20px', fontWeight: "bold", marginBottom: "15px" }}>Type</div>
           <div className="poketype">
             <div className="iop">
-              Fire
+              {type}
             </div>
+            {type2 ?
             <div className="iop">
-              Water
-            </div>
+            {type2}
+          </div>
+          :
+          ""
+          }
           </div>
           <div style={{ marginTop: "15px", fontSize: '20px', fontWeight: "bold", marginBottom: "15px" }}>Weakness</div>
           <div className="poketype">
