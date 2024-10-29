@@ -140,7 +140,7 @@ const Home = ({findDetails  ,setfindDetails}) => {
           </li>
           <li className='ab3'><Link className='vbn' to='/animations' >
             <img className='pokeball' src='./star.png' />
-            <div>Animations</div>
+            <div>Fight</div>
           </Link>
           </li>
           <li className='ab4'><Link className='vbn' to='/events'>

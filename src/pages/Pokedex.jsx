@@ -30,12 +30,14 @@ const Pokedex = ({ findDetails, setfindDetails }) => {
   useEffect(() => {
     if (findDetails) {
       const small = smallfirstletter(findDetails);
-      fetchApi3(small);
-      fetchApi4(small);
+       fetchApi3(small);
+    fetchApi4(small);
       fetchApi5(chainurl)
     }
 
   }, []);
+
+  
 
   const smallfirstletter = (val) => {
     return String(val).charAt(0).toLowerCase() + String(val).slice(1);
@@ -133,9 +135,7 @@ const Pokedex = ({ findDetails, setfindDetails }) => {
         fetchApi7(smallfirstletter(data.chain?.evolves_to[0]?.evolves_to[0]?.species?.name || '')),
       ]);
 
-      const[{tt1,tt2},{tt3,tt4},{tt5,tt6}] = await Promise.all([
-         fetchApiType(smallfirstletter(data.chain?.species?.name))
-      ])
+      
       fetchApiType(smallfirstletter(data.chain?.species?.name));
       fetchApiType2(smallfirstletter(data.chain?.evolves_to[0]?.species?.name || ''));
       fetchApiType3(smallfirstletter(data.chain?.evolves_to[0]?.evolves_to[0]?.species?.name || ''));
@@ -146,8 +146,8 @@ const Pokedex = ({ findDetails, setfindDetails }) => {
       setabc2(img2);
       setabc3(img3);
 
-    } catch (error) {
-      console.error('Error found in fetchApi5:', error);
+    } catch(err){
+      console.log('Error found in fetchApi5:', err);
     }
   };
 
