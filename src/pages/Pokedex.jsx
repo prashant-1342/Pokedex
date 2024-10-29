@@ -9,12 +9,24 @@ const Pokedex = ({findDetails  ,setfindDetails}) => {
    const [height, setheight] = useState()
    const [weight, setweight] = useState() 
    const[chainurl,setchainurl] = useState('');
+   const [base1, setbase1] = useState('');
+   const [base2, setbase2] = useState('');
+   const [base3, setbase3] = useState('');
+   const [pok1, setpok1] = useState('');
+   const [pok2, setpok2] = useState('');
+   const [pok3, setpok3] = useState('');
+   const [abc1, setabc1] = useState('');
+   const [abc2, setabc2] = useState('');
+   const [abc3, setabc3] = useState('');
+
+   
  
   useEffect(() => {
     if (findDetails) {
       const small =  smallfirstletter(findDetails);
       fetchApi3(small);
-      fetchApi4(small)
+      fetchApi4(small);
+      fetchApi5(chainurl)
     }
     
   }, []); 
@@ -63,6 +75,24 @@ const Pokedex = ({findDetails  ,setfindDetails}) => {
       setimage(data.sprites.other['official-artwork'].front_default);
       settype(capitalizeFirstLetter(data.types[0].type.name));
       settype2(data.types[1] ? capitalizeFirstLetter(data.types[1].type.name) : null);
+      {
+        abc1 === ''?
+        setabc1(data.sprites.other['official-artwork'].front_default)
+        :
+        '';
+      }
+      {
+        abc2 === ''?
+        setabc2(data.sprites.other['official-artwork'].front_default)
+        :
+        '';
+      }
+      {
+        abc3 === ''?
+        setabc3(data.sprites.other['official-artwork'].front_default)
+        :
+        '';
+      }
       const abc = data.height / 10;
      setheight(abc);
      const bcd = data.weight * 0.2;
@@ -72,13 +102,34 @@ const Pokedex = ({findDetails  ,setfindDetails}) => {
     }
   }
 
-  const fetchApi5 = async (chainurl)=>{
+  const fetchApi5 = async (chainurl) => {
     try {
-      const url = `${chainurl}`
+      const response = await fetch(chainurl);
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+  
+      // Ensure data properties exist before calling capitalizeFirstLetter
+      setbase1(capitalizeFirstLetter(data.chain?.species?.name || ''));
+      setpok1(smallfirstletter(data.chain?.species?.name || ''))
+      fetchApi4(pok1)
+      setbase2(capitalizeFirstLetter(data.chain?.evolves_to[0]?.species?.name || ''));
+      setpok2(smallfirstletter(data.chain?.evolves_to[0]?.species?.name || ''))
+      fetchApi4(pok2)
+      setbase3(capitalizeFirstLetter(data.chain?.evolves_to[0]?.evolves_to[0]?.species?.name || ''));
+      setpok3(smallfirstletter(data.chain?.evolves_to[0]?.evolves_to[0]?.species?.name || ''))
+      fetchApi4(pok3)
+  
     } catch (error) {
-      
+      console.error('Error found in fetchApi5:', error);
     }
-  }
+  };
+  
+
+
 
   function capitalizeFirstLetter(val) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
@@ -170,10 +221,10 @@ const Pokedex = ({findDetails  ,setfindDetails}) => {
           <div className="rft">
             <div className="co1">
               <div className='evolvecontain'>
-                <img className='rfc' src='./pokeball.png' />
+                <img className='rfc' src={`${abc1}`}/>
 
               </div>
-              <div style={{marginBottom:"10px"}}>Charmander</div>
+              <div style={{marginBottom:"10px"}}>{base1}</div>
               <div className="poketype2 ">
                 <div className="iop">
                   Fire
@@ -186,9 +237,9 @@ const Pokedex = ({findDetails  ,setfindDetails}) => {
             <img className='gre' src='./greater-than-symbol.png' />
             <div className="co1">
               <div className='evolvecontain'>
-                <img className='rfc' src='./pokeball.png' />
+                <img className='rfc' src={`${abc2}`} />
               </div>
-              <div style={{marginBottom:"10px"}}>Charmander</div>
+              <div style={{marginBottom:"10px"}}>{base2}</div>
               <div className="poketype2">
                 <div className="iop">
                   Fire
@@ -201,9 +252,9 @@ const Pokedex = ({findDetails  ,setfindDetails}) => {
             <img className='gre' src='./greater-than-symbol.png' />
             <div className="co1">
               <div className='evolvecontain'>
-                <img className='rfc' src='./pokeball.png' />
+                <img className='rfc' src={`${abc3}`} />
               </div>
-              <div style={{marginBottom:"10px"}}>Charmander</div>
+              <div style={{marginBottom:"10px"}}>{base3}</div>
               <div className="poketype2">
                 <div className="iop">
                   Fire
