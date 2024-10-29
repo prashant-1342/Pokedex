@@ -5,16 +5,18 @@ import Animations from './pages/Animations'
 import Events from './pages/Events'
 import Pokedex from './pages/Pokedex'
 import News from './pages/News'
+import Navbar from './components/Navbar'
 import { RouterProvider,createBrowserRouter } from 'react-router-dom'
 
 function App() {
+  const[findDetails,setfindDetails] = useState(30);
  
    const router = createBrowserRouter([
       {
         path:'/',
         element:(
           <>
-          <Home/>
+          <Home findDetails={findDetails} setfindDetails={setfindDetails}/>
           </>
         )
       },
@@ -22,7 +24,8 @@ function App() {
         path:'/pokedex',
         element:(
           <>
-           <Pokedex/>
+          <Navbar/>
+           <Pokedex findDetails={findDetails} setfindDetails={setfindDetails}/>
           </>
         )
       },
@@ -30,6 +33,7 @@ function App() {
         path:'/animations',
         element:(
           <>
+            <Navbar/>
            <Animations/>
           </>
         )
@@ -38,6 +42,7 @@ function App() {
         path:'/events',
         element:(
           <>
+            <Navbar/>
              <Events/>
           </>
         )
@@ -46,6 +51,7 @@ function App() {
         path:'/news',
         element:(
           <>
+            <Navbar/>
             <News/>
           </>
         )
