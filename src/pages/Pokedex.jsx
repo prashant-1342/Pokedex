@@ -81,6 +81,14 @@ const Pokedex = ({ findDetails, setfindDetails }) => {
     }
   };
 
+  function updateSearch(val){
+    setfindDetails(val)
+    window.scrollTo({
+      top:0,
+      behavior:'smooth'
+    })
+  }
+
   const fetchEvolutionChain = async (url) => {
     try {
       const response = await fetch(url);
@@ -181,8 +189,8 @@ const Pokedex = ({ findDetails, setfindDetails }) => {
         <div className="row2">
           <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '15px' }}>Type</div>
           <div className="poketype">
-            <div className="iop">{type}</div>
-            {type2 && <div className="iop">{type2}</div>}
+            <div className={`iop type-${type.toLowerCase()}`} >{type}</div>
+            {type2 && <div className={`iop type-${type2.toLowerCase()}`}>{type2}</div>}
           </div>
         </div>
         <div className="row3">
@@ -191,13 +199,13 @@ const Pokedex = ({ findDetails, setfindDetails }) => {
             {[abc1, abc2, abc3].map((img, index) => (
               img && (
                 <div className="co1" key={index}>
-                  <div className='evolvecontain'>
+                  <div className='evolvecontain' onClick={()=>updateSearch([base1, base2, base3][index])}>
                     <img className='rfc' src={img} alt={`Evolution ${index + 1}`} />
                   </div>
                   <div style={{ marginBottom: '10px' }}>{[base1, base2, base3][index]}</div>
                   <div className="poketype2">
-                    <div className="iop">{[t1, t3, t5][index]}</div>
-                    {[t2, t4, t6][index] && <div className="iop">{[t2, t4, t6][index]}</div>}
+                    <div className={`iop type-${t1.toLowerCase()}`} >{[t1, t3, t5][index]}</div>
+                    {[t2, t4, t6][index] && <div className={`iop type-${t6.toLowerCase()}`}>{[t2, t4, t6][index]}</div>}
                   </div>
                 </div>
               )

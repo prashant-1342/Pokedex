@@ -5,7 +5,7 @@ import Pokedex from './Pokedex';
 import Animations from './Animations';
 import Events from './Events';
 
-const Home = ({findDetails  ,setfindDetails}) => {
+const Home = ({ findDetails, setfindDetails }) => {
   const [inputValue, setinputValue] = useState("");
   const [pokename, setpokename] = useState("");
   const [pokeimage, setpokeimage] = useState("");
@@ -22,7 +22,7 @@ const Home = ({findDetails  ,setfindDetails}) => {
 
 
   useEffect(() => {
-   
+
     setTimeout(() => {
       fetchApi2();
     }, 500);
@@ -113,17 +113,22 @@ const Home = ({findDetails  ,setfindDetails}) => {
   const nextpage = () => {
     setlowerlimit(upperlimit + 1);
     setupperlimit(upperlimit + 20)
+
+    window.scrollTo({
+      top:0,
+      behavior:'smooth'
+    })
   }
 
   function capitalizeFirstLetter(val) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
   }
 
- function handleimageclick(val){
-  setfindDetails(val);
- }
+  function handleimageclick(val) {
+    setfindDetails(val);
+  }
 
-  
+
   return (
     <div>
       <div className="navbar">
@@ -145,16 +150,16 @@ const Home = ({findDetails  ,setfindDetails}) => {
           </li>
           <li className='ab4'><Link className='vbn' to='/events'>
             <img className='pokeball' src='./star.png' />
-            <div>Events</div>
+            <div>Bookmarks</div>
           </Link>
           </li>
-          <li className='ab5'><Link className='vbn' to='/news'>
-            <img className='pokeball' src='./star.png' />
-            <div>News</div>
-          </Link>
-          </li>
+         
         </ul>
+        <div className="dark">
+          <img style={{height:'100%',width:'100%'}}  src='./night-mode.png'/>
+        </div>
       </div>
+    
       <div className='cvf'>Pokédex</div>
       <div className="container">
         <div className='qas'>Name or Number</div>
@@ -166,25 +171,25 @@ const Home = ({findDetails  ,setfindDetails}) => {
         {show ?
           <div className="cards">
             <div className="card">
-              <img className='pokeimage' src={`${pokeimage}`} />
-
-              <div className="pokename">
-                {pokename}
-              </div>
-
-              <div className="poketype">
-                <div className="iop">
-                  {poketype}
+              <Link to='/pokedex' onClick={() => handleimageclick(pokename)} >
+                <img className='pokeimage' src={`${pokeimage}`} />
+                <div className="pokename">
+                  {pokename}
                 </div>
-                {poketype2 ?
-                  <div className="iop">
-                    {poketype2}
-                  </div>
-                  :
-                  ""
-                }
 
-              </div>
+                <div className="poketype">
+                  <div className={`iop type-${poketype.toLowerCase()}`} >
+                    {poketype}
+                  </div>
+                  {poketype2 ?
+                    <div className={`iop type-${poketype2.toLowerCase()}`} >
+                      {poketype2}
+                    </div>
+                    :
+                    ""
+                  }
+
+                </div>'</Link>'
             </div>
           </div>
           :
@@ -196,7 +201,7 @@ const Home = ({findDetails  ,setfindDetails}) => {
             <div className="lists">
               {pokelist.map((pokemon, index) => (
                 <div className="card" key={index}>
-                  <Link to='/pokedex' onClick={()=>handleimageclick(pokemon.name)}>
+                  <Link to='/pokedex' onClick={() => handleimageclick(pokemon.name)}>
                     <img className='pokeimage' src={pokemon.image} /></Link>
 
                   <div className="pokename">
@@ -204,11 +209,11 @@ const Home = ({findDetails  ,setfindDetails}) => {
                   </div>
 
                   <div className="poketype">
-                    <div className="iop">
+                    <div className={`iop type-${pokemon.type.toLowerCase()}`} >
                       {pokemon.type}
                     </div>
                     {pokemon.type2 ?
-                      <div className="iop">
+                      <div className={`iop type-${pokemon.type2.toLowerCase()}`} >
                         {pokemon.type2}
                       </div>
                       :
@@ -221,6 +226,13 @@ const Home = ({findDetails  ,setfindDetails}) => {
               ))}
 
             </div>
+             <div className='bnm2'>
+             <a  onClick={nextpage}>
+              <img className='renewable' src='./reload.png' />
+              Next Page
+            </a>
+             </div>
+           
           </>
         }
       </div>

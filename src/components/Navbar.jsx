@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 
 const Navbar = () => {
   return (
+    <>
     <div className="navbar">
         <ul>
           <li className='ab1'><Link className='vbn' to='/'>
@@ -17,21 +18,19 @@ const Navbar = () => {
           </li>
           <li className='ab3'><Link className='vbn'  to='/animations' >
             <img className='pokeball' src='./star.png' />
-            <div>Animations</div>
+            <div>Fight</div>
             </Link>
           </li>
           <li className='ab4'><Link className='vbn'  to='/events'>
             <img className='pokeball' src='./star.png' />
-            <div>Events</div>
+            <div>Bookmarks</div>
             </Link>
           </li>
-          <li className='ab5'><Link className='vbn'  to='/news'>
-            <img className='pokeball' src='./star.png' />
-            <div>News</div>
-            </Link>
-          </li>
+         
         </ul>
       </div>
+      <div className="dark"></div>
+      </>
   )
 }
 
