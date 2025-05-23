@@ -146,9 +146,7 @@ const Home = ({ findDetails, setfindDetails }) => {
           
          
         </ul>
-        <div className="dark">
-          <img style={{height:'100%',width:'100%'}}  src='./night-mode.png'/>
-        </div>
+       
       </div>
     
       <div className='cvf'>Pokédex</div>
