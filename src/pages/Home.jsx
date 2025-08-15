@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 import Pokedex from './Pokedex';
 
-import Navbar from '../components/Navbar';
+
 
 const Home = ({ findDetails, setfindDetails }) => {
   const [inputValue, setinputValue] = useState("");
@@ -147,31 +147,7 @@ const Home = ({ findDetails, setfindDetails }) => {
   return (
     <div>
    
-      <div className="navbar">
-        <ul>
-          <li className='ab1'><Link className='vbn' to='/'>
-            <img className='pokeball' src='./star.png' />
-            <div>Home</div>
-          </Link>
-          </li>
-          <li className='ab2'><Link className='vbn' to='/pokedex'>
-            <img className='pokeball' src='./star.png' />
-            <div>Pokedex</div>
-          </Link>
-          </li>
-          
-          
-         
-        </ul>
-        
-      </div>
-      <img
-  className="darkmode-toggle"
-  src='night.png'
-  onClick={() => document.body.classList.toggle('dark-mode')}
->
- 
-</img>
+      
     
       <div className='cvf'>Pokédex</div>
       <div className="container">

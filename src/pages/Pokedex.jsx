@@ -167,29 +167,7 @@ const Pokedex = ({ findDetails, setfindDetails }) => {
 
   return (
     <>
-       <div className="navbar">
-              <ul>
-                <li className='ab1'><Link className='vbn' to='/'>
-                  <img className='pokeball' src='./star.png' />
-                  <div>Home</div>
-                </Link>
-                </li>
-                <li className='ab2'><Link className='vbn' to='/pokedex'>
-                  <img className='pokeball' src='./star.png' />
-                  <div>Pokedex</div>
-                </Link>
-                </li>
-                
-                
-               
-              </ul>
-              
-            </div>
-            <img
-        className="darkmode-toggle"
-        src='night.png'
-        onClick={() => document.body.classList.toggle('dark-mode')}
-      ></img>
+       
       <div className="axs">
         <div className="ijk">{findDetails}</div>
       </div>
@@ -247,8 +225,8 @@ const Pokedex = ({ findDetails, setfindDetails }) => {
                   </div>
                   <div style={{ marginBottom: "10px" }}>{[base1, base2, base3][index]}</div>
                   <div className="poketype2 responsive-poketype2">
-                    <div className={`iop type-${t1.toLowerCase()}`}>{[t1, t3, t5][index]}</div>
-                    {[t2, t4, t6][index] && <div className={`iop type-${t6.toLowerCase()}`}>{[t2, t4, t6][index]}</div>}
+                    <div className={`iop type-${[t1, t3, t5][index]?.toLowerCase()}`}>{[t1, t3, t5][index]}</div>
+                    {[t2, t4, t6][index] && <div className={`iop type-${[t2, t4, t6][index]?.toLowerCase()}`}>{[t2, t4, t6][index]}</div>}
                   </div>
                 </div>
               )
