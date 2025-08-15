@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import Navbar from '../components/Navbar';
+import { Link } from 'react-router-dom';
 
 const Pokedex = ({ findDetails, setfindDetails }) => {
   const [aboutpokemon, setAboutPokemon] = useState('');
@@ -23,9 +25,17 @@ const Pokedex = ({ findDetails, setfindDetails }) => {
   const [category, setcategory] = useState('')
   const [ability,setability] = useState('')
 
+  const fallbackImg = './pokeball.png';
+
   useEffect(() => {
-    if (findDetails) {
-      const pokemonName = smallFirstLetter(findDetails);
+    let nameToShow = findDetails;
+    if (!findDetails) {
+      const randomId = Math.floor(Math.random() * 400) + 1;
+      nameToShow = randomId.toString();
+      setfindDetails(nameToShow);
+    }
+    if (nameToShow) {
+      const pokemonName = smallFirstLetter(nameToShow);
       fetchPokemonSpecies(pokemonName);
       fetchPokemonDetails(pokemonName);
     }
@@ -36,6 +46,14 @@ const Pokedex = ({ findDetails, setfindDetails }) => {
       fetchEvolutionChain(chainUrl);
     }
   }, [chainUrl]);
+
+  if (!document.body.classList.contains('dark-mode')) {
+    document.body.classList.add('dark-mode');
+  }
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }, []);
 
   const smallFirstLetter = (val) => 
     val.charAt(0).toLowerCase() + val.slice(1);
@@ -149,62 +167,87 @@ const Pokedex = ({ findDetails, setfindDetails }) => {
 
   return (
     <>
-      <div className='axs'>
-        <div className="ijk">
-        {findDetails}
-        </div>
-      
-        </div>
-      <div className="containerpokedex">
-        <div className="row1">
-          <div className="col1">
-            <img className='edr' src={image} alt="Pokemon" />
+       <div className="navbar">
+              <ul>
+                <li className='ab1'><Link className='vbn' to='/'>
+                  <img className='pokeball' src='./star.png' />
+                  <div>Home</div>
+                </Link>
+                </li>
+                <li className='ab2'><Link className='vbn' to='/pokedex'>
+                  <img className='pokeball' src='./star.png' />
+                  <div>Pokedex</div>
+                </Link>
+                </li>
+                
+                
+               
+              </ul>
+              
+            </div>
+            <img
+        className="darkmode-toggle"
+        src='night.png'
+        onClick={() => document.body.classList.toggle('dark-mode')}
+      ></img>
+      <div className="axs">
+        <div className="ijk">{findDetails}</div>
+      </div>
+      <div className="containerpokedex responsive-pokedex">
+        <div className="row1 responsive-row1">
+          <div className="col1 responsive-col1">
+            <img
+              className="edr responsive-img"
+              src={image || fallbackImg}
+              alt="Pokemon"
+              onError={e => { e.target.onerror = null; e.target.src = fallbackImg; }}
+            />  
           </div>
-          <div className="col2">
+          <div className="col2 responsive-col2">
             {aboutpokemon}
             <br /><br />
-            <span className='azs'>
-              Versions: 
-              <img className='pokeballsize' src='./pokeball (2).png' alt="Pokeball" />
-              <img className='pokeballsize' src='./pokeball.png' alt="Pokeball" />
+            <span className="azs responsive-azs">
+              Versions:
+              <img className="pokeballsize" src="./pokeball (2).png" alt="Pokeball" />
+              <img className="pokeballsize" src="./pokeball.png" alt="Pokeball" />
             </span>
-            <div className="aboutpokemon">
-              <div className="colum1">
-                <div className="height"><span style={{color:"white"}}> Height</span><br/>{height} meters</div>
-                <div className="weight"><span style={{color:"white"}}>Weight<br/></span>{weight}</div>
-                <div className="gender" style={{color:"white"}}>Gender<br />
-                  <span className='dcf'>
-                    <img className='gendermale' src='./mars.png' alt="Male" />
-                    <img className='gendermale' src='./femenine.png' alt="Female" />
+            <div className="aboutpokemon responsive-aboutpokemon">
+              <div className="colum1 responsive-colum1">
+                <div className="height"><span style={{ color: "white" }}> Height</span><br />{height} meters</div>
+                <div className="weight"><span style={{ color: "white" }}>Weight<br /></span>{weight}</div>
+                <div className="gender" style={{ color: "white" }}>Gender<br />
+                  <span className="dcf">
+                    <img className="gendermale" src="./mars.png" alt="Male" />
+                    <img className="gendermale" src="./femenine.png" alt="Female" />
                   </span>
                 </div>
               </div>
-              <div className="colum2" style={{paddingTop:"10px"}}>
-                <div className="category"><span style={{color:"white"}}>Category<br/></span>{category}</div>
-                <div className="abilities"><span style={{color:"white"}}>Abilities<br /></span>{ability}</div>
+              <div className="colum2 responsive-colum2" style={{ paddingTop: "10px" }}>
+                <div className="category"><span style={{ color: "white" }}>Category<br /></span>{category}</div>
+                <div className="abilities"><span style={{ color: "white" }}>Abilities<br /></span>{ability}</div>
               </div>
             </div>
           </div>
         </div>
-        <div className="row2">
-          <div style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '15px' }}>Type</div>
-          <div className="poketype">
-            <div className={`iop type-${type.toLowerCase()}`} >{type}</div>
+        <div className="row2 responsive-row2">
+          <div style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "15px" }}>Type</div>
+          <div className="poketype responsive-poketype">
+            <div className={`iop type-${type.toLowerCase()}`}>{type}</div>
             {type2 && <div className={`iop type-${type2.toLowerCase()}`}>{type2}</div>}
           </div>
         </div>
-        <div className="row3">
+        <div className="row3 responsive-row3">
           <h2>Evolutions</h2>
-          <div className="rft">
+          <div className="rft responsive-rft">
             {[abc1, abc2, abc3].map((img, index) => (
               img && (
-                <div className="co1" key={index}>
-                  <div className='evolvecontain' onClick={()=>updateSearch([base1, base2, base3][index])}>
-                    <img className='rfc' src={img} alt={`Evolution ${index + 1}`} />
+                <div className="co1 responsive-co1" key={index}>
+                  <div className="evolvecontain responsive-evolvecontain" onClick={() => updateSearch([base1, base2, base3][index])}>
+                    <img className="rfc responsive-rfc" src={img} alt={`Evolution ${index + 1}`} />
                   </div>
-                  <div style={{ marginBottom: '10px' }}>{[base1, base2, base3][index]}</div>
-                  <div className="poketype2">
-                    <div className={`iop type-${t1.toLowerCase()}`} >{[t1, t3, t5][index]}</div>
+                  <div style={{ marginBottom: "10px" }}>{[base1, base2, base3][index]}</div>
+                  <div className="poketype2 responsive-poketype2">
+                    <div className={`iop type-${t1.toLowerCase()}`}>{[t1, t3, t5][index]}</div>
                     {[t2, t4, t6][index] && <div className={`iop type-${t6.toLowerCase()}`}>{[t2, t4, t6][index]}</div>}
                   </div>
                 </div>

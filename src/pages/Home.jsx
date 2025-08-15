@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
-import News from './News';
+
 import Pokedex from './Pokedex';
-import Animations from './Animations';
-import Events from './Events';
+
+import Navbar from '../components/Navbar';
 
 const Home = ({ findDetails, setfindDetails }) => {
   const [inputValue, setinputValue] = useState("");
@@ -11,27 +11,39 @@ const Home = ({ findDetails, setfindDetails }) => {
   const [pokeimage, setpokeimage] = useState("");
   const [poketype, setpoketype] = useState("");
   const [pokelist, setpokelist] = useState([]);
+  const [filteredPokelist, setFilteredPokelist] = useState([]);
   const [poketype2, setpoketype2] = useState("");
   const [show, setshow] = useState(false);
   const [upperlimit, setupperlimit] = useState(100);
   const [lowerlimit, setlowerlimit] = useState(0);
 
   function handleinput(e) {
-    setinputValue(e.target.value);
+    const value = e.target.value;
+    setinputValue(value);
+    if (value === "") {
+      setFilteredPokelist(pokelist);
+    } else {
+      setFilteredPokelist(
+        pokelist.filter(pokemon =>
+          pokemon.name.toLowerCase().startsWith(value.toLowerCase())
+        )
+      );
+    }
   }
 
 
   useEffect(() => {
-
     setTimeout(() => {
       fetchApi2();
     }, 500);
+  }, [lowerlimit, upperlimit]);
 
-  }, [lowerlimit, upperlimit])
+  useEffect(() => {
+    setFilteredPokelist(pokelist);
+  }, [pokelist]);
 
   const fetchApi2 = async () => {
     try {
-      // const url = `https://pokeapi.co/api/v2/pokemon`
       const url = `https://pokeapi.co/api/v2/pokemon?limit=${upperlimit}&offset=${lowerlimit}`
       const response = await fetch(url);
       const data2 = await response.json();
@@ -39,7 +51,6 @@ const Home = ({ findDetails, setfindDetails }) => {
         const detailedlist = await Promise.all(
           data2.results.map(async (pokemon) => {
             const details = await fetchpokemondetails(pokemon.url);
-            // console.log(details);
             return details;
           })
         )
@@ -128,9 +139,14 @@ const Home = ({ findDetails, setfindDetails }) => {
     setfindDetails(val);
   }
 
+  if (!document.body.classList.contains('dark-mode')) {
+    document.body.classList.add('dark-mode');
+  }
+
 
   return (
     <div>
+   
       <div className="navbar">
         <ul>
           <li className='ab1'><Link className='vbn' to='/'>
@@ -143,28 +159,32 @@ const Home = ({ findDetails, setfindDetails }) => {
             <div>Pokedex</div>
           </Link>
           </li>
-          <li className='ab3'><Link className='vbn' to='/animations' >
-            <img className='pokeball' src='./star.png' />
-            <div>Fight</div>
-          </Link>
-          </li>
-          <li className='ab4'><Link className='vbn' to='/events'>
-            <img className='pokeball' src='./star.png' />
-            <div>Bookmarks</div>
-          </Link>
-          </li>
+          
+          
          
         </ul>
-        <div className="dark">
-          <img style={{height:'100%',width:'100%'}}  src='./night-mode.png'/>
-        </div>
+        
       </div>
+      <img
+  className="darkmode-toggle"
+  src='night.png'
+  onClick={() => document.body.classList.toggle('dark-mode')}
+>
+ 
+</img>
     
       <div className='cvf'>Pokédex</div>
       <div className="container">
         <div className='qas'>Name or Number</div>
         <div className="ghj">
-          <input className='sed' value={inputValue} onChange={handleinput} />
+          <input
+            className='sed'
+            value={inputValue}
+            onChange={handleinput}
+            onKeyDown={e => {
+              if (e.key === 'Enter') handleSearch();
+            }}
+          />
           <img onClick={() => handleSearch()} className='searchicon' src='./loupe.png' />
         </div>
 
@@ -199,7 +219,7 @@ const Home = ({ findDetails, setfindDetails }) => {
               Surpise Me
             </a>
             <div className="lists">
-              {pokelist.map((pokemon, index) => (
+              {filteredPokelist.map((pokemon, index) => (
                 <div className="card" key={index}>
                   <Link to='/pokedex' onClick={() => handleimageclick(pokemon.name)}>
                     <img className='pokeimage' src={pokemon.image} /></Link>
@@ -224,7 +244,6 @@ const Home = ({ findDetails, setfindDetails }) => {
                 </div>
 
               ))}
-
             </div>
              <div className='bnm2'>
              <a  onClick={nextpage}>

@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import './App.css'
 import Home from './pages/Home'
-import Animations from './pages/Animations'
-import Events from './pages/Events'
+
 import Pokedex from './pages/Pokedex'
-import News from './pages/News'
-import Navbar from './components/Navbar'
+
+
 import { RouterProvider,createBrowserRouter } from 'react-router-dom'
 
 function App() {
@@ -24,35 +23,8 @@ function App() {
         path:'/pokedex',
         element:(
           <>
-          <Navbar/>
+         
            <Pokedex findDetails={findDetails} setfindDetails={setfindDetails}/>
-          </>
-        )
-      },
-      {
-        path:'/animations',
-        element:(
-          <>
-            <Navbar/>
-           <Animations/>
-          </>
-        )
-      },
-      {
-        path:'/events',
-        element:(
-          <>
-            <Navbar/>
-             <Events/>
-          </>
-        )
-      },
-      {
-        path:'/news',
-        element:(
-          <>
-            <Navbar/>
-            <News/>
           </>
         )
       }
